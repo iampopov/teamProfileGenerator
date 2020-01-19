@@ -6,11 +6,6 @@ const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-
-const outputPath = path.resolve(__dirname, "output", "team.html");
-
-const render = require("./lib/htmlRenderer");
-
 const eeQuestions = [
     {
         name: 'Employee name',
@@ -27,6 +22,11 @@ const eeQuestions = [
         name: 'Employee type',
         message: "Who would you like to enter first?",
         choices: ['Manager','Engineer','Intern']
+    },
+    {
+        message: "Would you like to exit?",
+        type: 'confirm',
+        name: 'Exit',
     }
 ]
 const specificQuestions = [
@@ -44,32 +44,56 @@ const specificQuestions = [
     }
 
 ]
+const empArr = [];
+
+const outputPath = path.resolve(__dirname, "output", "team.html");
+
+const render = require("./lib/htmlRenderer");
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+function menu () {
+    inquirer
+        .prompt(eeQuestions)
+        .then(answers => {
+            
+            if (answers['Exit']) {
+                process.exit(0);
+            }
 
-inquirer
-    .prompt(eeQuestions)
-    .then( answers => {
-        // console.log(answers['Employee name'])
-        // console.log(answers['Employee id'])
-        // console.log(answers['Employee type'])
-        // const employee = new Employee(answers['Employee name'], answers['Employee id'], answers['Employee type']);
-        // console.log(employee);
-        if (answers['Employee type']==='Manager') {
-            //console.log("yeah");
-             inquirer
-            .prompt(specificQuestions[0])
-            .then(managerAnswers => {
-                //console.log(managerAnswers)
-                const manager = new Manager(answers['Employee name'], answers['Employee id'], answers['Employee type'], managerAnswers)
-                console.log(manager);
-            })
-        } else {console.log("nah")}
-    }
-    
-    )
-
+            else if (answers['Employee type']==='Manager') {
+                 inquirer
+                .prompt(specificQuestions[0])
+                .then(function managerAnswers() {
+                    const manager = new Manager(answers['Employee name'], answers['Employee id'], answers['Employee type'], managerAnswers);
+                    empArr.push(manager);
+                    //console.log(empArr);
+                    menu(empArr);
+                })
+            } else if (answers['Employee type']==='Engineer') {
+                inquirer
+                .prompt(specificQuestions[1])
+                .then(engineerAnswers => {
+                    const engineer = new Engineer(answers['Employee name'], answers['Employee id'], answers['Employee type'], engineerAnswers);
+                    empArr.push(engineer);
+                    //console.log(empArr);
+                })
+            } else if (answers['Employee type']==='Intern') {
+                inquirer
+                .prompt(specificQuestions[2])
+                .then(internAnswers => {
+                    const intern = new Intern(answers['Employee name'], answers['Employee id'], answers['Employee type'], internAnswers);
+                    empArr.push(intern);
+                    //console.log(empArr);
+                })
+            } 
+            console.log(empArr);
+        }
+        
+        )
+}
+menu();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
