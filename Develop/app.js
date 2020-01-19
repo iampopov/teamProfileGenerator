@@ -2,6 +2,7 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
+const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
@@ -10,10 +11,64 @@ const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const eeQuestions = [
+    {
+        name: 'Employee name',
+        message: 'Please enter employee name: ',
+        default: 'default'
+    },
+    {
+        name: 'Employee id',
+        message: 'Please enter employee id: ',
+        default: '1'
+    },
+    {
+        type: 'list',
+        name: 'Employee type',
+        message: "Who would you like to enter first?",
+        choices: ['Manager','Engineer','Intern']
+    }
+]
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-
+inquirer
+    .prompt(eeQuestions)
+    .then( answers => {
+        // console.log(answers['Employee name'])
+        // console.log(answers['Employee id'])
+        // console.log(answers['Employee type'])
+        const employee = new Employee(['Employee name'], ['Employee id'], ['Employee type']);
+        console.log(employee);
+    }
+        
+        
+        // specify => {
+        // if (choices === 'Manager'){
+        //     inquirer
+        //     .prompt([
+        //         {
+        //             name: 'officeNumber',
+        //             message: 'Please enter office phone number'
+        //         }
+        //     ])
+        // } else if (choices === 'Engineer') {
+        //     inquirer
+        //     .prompt([
+        //         {
+        //             name: 'gitHub',
+        //             message: 'Please enter gitHub account id'
+        //         }
+        //     ])
+        // } else {
+        //     inquirer
+        //     .prompt([{
+        //         name: 'School',
+        //         message: 'Please enter school'
+        //     }])
+        // }
+    //}
+    )
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
