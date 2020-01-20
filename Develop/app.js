@@ -24,77 +24,70 @@ const eeQuestions = [
         choices: ['Manager','Engineer','Intern']
     },
     {
-        message: "Would you like to exit?",
-        type: 'confirm',
-        name: 'Exit',
-    }
-]
-const specificQuestions = [
-    {
         name: 'officeNumber',
-        message: 'Please enter office phone number'
+        message: 'Please enter office phone number',
+        when: function( answers ) {
+            return answers['Employee type']==='Manager'
+        }
     },
     {
         name: 'gitHub',
-        message: 'Please enter gitHub account id'
+        message: 'Please enter gitHub account id',
+        when: function( answers ) {
+            return answers['Employee type']==='Engineer'
+        }
     },
     {
-        name: 'School',
-        message: 'Please enter school'
+        name: "School",
+        message: 'Please enter school',
+        when: function( answers ) {
+            return answers['Employee type']==='Intern'
+        }
     }
-
 ]
+const initialQuestions = [
+    {
+        message: "What would you like to do now?",
+        type: "list",
+        name: "Initial Question",
+        choices: ['Enter employee', 'Quit', 'Render Information to team.html']
+    }
+]
+
 const empArr = [];
 
 const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+function udpateEmpArr(answers) {
+    //console.log(answers);
+  empArr.push(answers)
+  menu();
+  }
 
+function askEmployeeQuestions() {
+    inquirer.prompt(eeQuestions).then(udpateEmpArr)
+}
+
+function renderInformation() {
+    console.log(empArr)
+}
+
+function initialAnswers(answers) {
+    if (answers['Initial Question']==='Enter employee') {
+        askEmployeeQuestions();
+    } else if (answers['Initial Question']==='Render Information to team.html') {
+        renderInformation();
+    } else {
+        process.exit(0); 
+    }
+}
+
+inquirer.prompt(initialQuestions).then(initialAnswers);
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-function menu () {
-    inquirer
-        .prompt(eeQuestions)
-        .then(answers => {
-            
-            if (answers['Exit']) {
-                process.exit(0);
-            }
-
-            else if (answers['Employee type']==='Manager') {
-                 inquirer
-                .prompt(specificQuestions[0])
-                .then(function managerAnswers() {
-                    const manager = new Manager(answers['Employee name'], answers['Employee id'], answers['Employee type'], managerAnswers);
-                    empArr.push(manager);
-                    //console.log(empArr);
-                    menu(empArr);
-                })
-            } else if (answers['Employee type']==='Engineer') {
-                inquirer
-                .prompt(specificQuestions[1])
-                .then(engineerAnswers => {
-                    const engineer = new Engineer(answers['Employee name'], answers['Employee id'], answers['Employee type'], engineerAnswers);
-                    empArr.push(engineer);
-                    //console.log(empArr);
-                })
-            } else if (answers['Employee type']==='Intern') {
-                inquirer
-                .prompt(specificQuestions[2])
-                .then(internAnswers => {
-                    const intern = new Intern(answers['Employee name'], answers['Employee id'], answers['Employee type'], internAnswers);
-                    empArr.push(intern);
-                    //console.log(empArr);
-                })
-            } 
-            console.log(empArr);
-        }
-        
-        )
-}
-menu();
-
+// 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
@@ -113,3 +106,60 @@ menu();
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work!
 
+// const specificQuestions = [
+//     {
+//         name: 'officeNumber',
+//         message: 'Please enter office phone number'
+//     },
+//     {
+//         name: 'gitHub',
+//         message: 'Please enter gitHub account id'
+//     },
+//     {
+//         name: 'School',
+//         message: 'Please enter school'
+//     }
+
+// ]
+//function menu () {
+    //     inquirer
+    //         .prompt(eeQuestions)
+    //         .then(answers => {
+                
+    //             if (answers['Exit']) {
+    //                 process.exit(0);
+    //             }
+    
+    //             else if (answers['Employee type']==='Manager') {
+    //                  inquirer
+    //                 .prompt(specificQuestions[0])
+    //                 .then(function managerAnswers() {
+    //                     const manager = new Manager(answers['Employee name'], answers['Employee id'], answers['Employee type'], managerAnswers);
+    //                     empArr.push(manager);
+    //                     //console.log(empArr);
+    //                     menu(empArr);
+    //                 })
+    //             } else if (answers['Employee type']==='Engineer') {
+    //                 inquirer
+    //                 .prompt(specificQuestions[1])
+    //                 .then(engineerAnswers => {
+    //                     const engineer = new Engineer(answers['Employee name'], answers['Employee id'], answers['Employee type'], engineerAnswers);
+    //                     empArr.push(engineer);
+    //                     //console.log(empArr);
+    //                 })
+    //             } else if (answers['Employee type']==='Intern') {
+    //                 inquirer
+    //                 .prompt(specificQuestions[2])
+    //                 .then(internAnswers => {
+    //                     const intern = new Intern(answers['Employee name'], answers['Employee id'], answers['Employee type'], internAnswers);
+    //                     empArr.push(intern);
+    //                     //console.log(empArr);
+    //                 })
+    //             } 
+    //             console.log(empArr);
+    //         }
+            
+    //         )
+    // }
+    // menu();
+    
