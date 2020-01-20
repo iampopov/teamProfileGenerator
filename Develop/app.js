@@ -82,9 +82,16 @@ const main = async () => {
             employee.push(nI);
         }
     }    
-    
-    console.log(employee);
-    
+    //console.log(employee);
+    fs.writeFile("team.html", render(employee), function(err) {
+
+        if (err) {
+          return console.log(err);
+        }
+      
+        console.log("Success!");
+      
+      })
   };
   
 main();
