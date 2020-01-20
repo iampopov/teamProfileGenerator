@@ -70,7 +70,7 @@ const main = async () => {
     const inputs = await eeQuestions();
     //console.log(inputs[0].employeeName);
     let employee = [];
-    for (let i=0; i<inputs.length; i++) {
+    for (let i in inputs) {
         if (inputs[i].employeeType==='Manager') {
             let nM = new Manager(inputs[i].employeeName, inputs[i].employeeId, inputs[i].employeeEmail, inputs[i].officeNumber)
             employee.push(nM);    
