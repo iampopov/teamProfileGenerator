@@ -66,13 +66,25 @@ const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const main = async function() {
+const main = async () => {
     const inputs = await eeQuestions();
-    console.log(inputs);
-    // const employee = [
-    //     new Manager(inputs.employeeName, inputs.employeeId, inputs.employeeEmail, inputs.officeNumber)
-    // ]
-    // console.log(employee)
+    //console.log(inputs[0].employeeName);
+    let employee = [];
+    for (let i=0; i<inputs.length; i++) {
+        if (inputs[i].employeeType==='Manager') {
+            let nM = new Manager(inputs[i].employeeName, inputs[i].employeeId, inputs[i].employeeEmail, inputs[i].officeNumber)
+            employee.push(nM);    
+        } else if (inputs[i].employeeType==='Engineer') {
+            let nE = new Engineer(inputs[i].employeeName, inputs[i].employeeId, inputs[i].employeeEmail, inputs[i].gitHub)
+            employee.push(nE);
+        } else {
+            let nI = new Intern(inputs[i].employeeName, inputs[i].employeeId, inputs[i].employeeEmail, inputs[i].school)
+            employee.push(nI);
+        }
+    }    
+    
+    console.log(employee);
+    
   };
   
 main();
