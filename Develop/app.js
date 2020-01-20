@@ -9,35 +9,20 @@ const fs = require("fs");
 const eeQuestions = async (inputs = []) => {
     const prompts = [
     {
-        message: "What would you like to do now?",
-        type: "list",
-        name: "Initial Question",
-        choices: ['Enter employee', 'Quit', 'Render Information to team.html']
-    },
-    {
         name: 'Employee name',
         message: 'Please enter employee name: ',
-        default: 'default',
-        when: function( answers ) {
-            return answers["Initial Question"] === 'Enter employee'
-        }
+        default: 'default'
     },
     {
         name: 'Employee id',
         message: 'Please enter employee id: ',
-        default: '1',
-        when: function( answers ) {
-            return answers["Initial Question"] === 'Enter employee'
-        }
+        default: '1'
     },
     {
         type: 'list',
         name: 'Employee type',
         message: "Who would you like to enter first?",
-        choices: ['Manager','Engineer','Intern'],
-        when: function( answers ) {
-            return answers["Initial Question"] === 'Enter employee'
-        }
+        choices: ['Manager','Engineer','Intern']
     },
     {
         name: 'officeNumber',
@@ -63,10 +48,7 @@ const eeQuestions = async (inputs = []) => {
     {
         type: 'confirm',
         name: 'again',
-        message: 'Would you like to enter more employees?',
-        when: function( answers ) {
-            return answers["Initial Question"] === 'Enter employee'
-        }
+        message: 'Would you like to enter more employees?'
     }
 ]
 
