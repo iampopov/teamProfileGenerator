@@ -2,25 +2,30 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const Employee = require("./lib/Employee");
+//const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const eeQuestions = async (inputs = []) => {
     const prompts = [
     {
-        name: 'Employee name',
+        name: 'employeeName',
         message: 'Please enter employee name: ',
         default: 'default'
     },
     {
-        name: 'Employee id',
+        name: 'employeeId',
         message: 'Please enter employee id: ',
         default: '1'
     },
     {
+        name: 'employeeEmail',
+        message: 'Please enter employee email: ',
+        default: 'mail@mail.com'
+    },
+    {
         type: 'list',
-        name: 'Employee type',
+        name: 'employeeType',
         message: "Who would you like to enter first?",
         choices: ['Manager','Engineer','Intern']
     },
@@ -28,21 +33,21 @@ const eeQuestions = async (inputs = []) => {
         name: 'officeNumber',
         message: 'Please enter office phone number',
         when: function( answers ) {
-            return answers['Employee type']==='Manager'
+            return answers['employeeType']==='Manager'
         }
     },
     {
         name: 'gitHub',
         message: 'Please enter gitHub account id',
         when: function( answers ) {
-            return answers['Employee type']==='Engineer'
+            return answers['employeeType']==='Engineer'
         }
     },
     {
-        name: "School",
+        name: "school",
         message: 'Please enter school',
         when: function( answers ) {
-            return answers['Employee type']==='Intern'
+            return answers['employeeType']==='Intern'
         }
     },
     {
@@ -61,9 +66,13 @@ const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const main = async () => {
+const main = async function() {
     const inputs = await eeQuestions();
     console.log(inputs);
+    // const employee = [
+    //     new Manager(inputs.employeeName, inputs.employeeId, inputs.employeeEmail, inputs.officeNumber)
+    // ]
+    // console.log(employee)
   };
   
 main();
