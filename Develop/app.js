@@ -6,22 +6,38 @@ const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-const eeQuestions = [
+const eeQuestions = async (inputs = []) => {
+    const prompts = [
+    {
+        message: "What would you like to do now?",
+        type: "list",
+        name: "Initial Question",
+        choices: ['Enter employee', 'Quit', 'Render Information to team.html']
+    },
     {
         name: 'Employee name',
         message: 'Please enter employee name: ',
-        default: 'default'
+        default: 'default',
+        when: function( answers ) {
+            return answers["Initial Question"] === 'Enter employee'
+        }
     },
     {
         name: 'Employee id',
         message: 'Please enter employee id: ',
-        default: '1'
+        default: '1',
+        when: function( answers ) {
+            return answers["Initial Question"] === 'Enter employee'
+        }
     },
     {
         type: 'list',
         name: 'Employee type',
         message: "Who would you like to enter first?",
-        choices: ['Manager','Engineer','Intern']
+        choices: ['Manager','Engineer','Intern'],
+        when: function( answers ) {
+            return answers["Initial Question"] === 'Enter employee'
+        }
     },
     {
         name: 'officeNumber',
@@ -43,48 +59,33 @@ const eeQuestions = [
         when: function( answers ) {
             return answers['Employee type']==='Intern'
         }
-    }
-]
-const initialQuestions = [
+    },
     {
-        message: "What would you like to do now?",
-        type: "list",
-        name: "Initial Question",
-        choices: ['Enter employee', 'Quit', 'Render Information to team.html']
+        type: 'confirm',
+        name: 'again',
+        message: 'Would you like to enter more employees?',
+        when: function( answers ) {
+            return answers["Initial Question"] === 'Enter employee'
+        }
     }
 ]
 
-const empArr = [];
+const {again, ...answers} = await inquirer.prompt(prompts);
+const newInputs = [...inputs, answers];
+return again ? eeQuestions(newInputs) : newInputs;
+}
 
 const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-function udpateEmpArr(answers) {
-    //console.log(answers);
-  empArr.push(answers)
-  menu();
-  }
+const main = async () => {
+    const inputs = await eeQuestions();
+    console.log(inputs);
+  };
+  
+main();
 
-function askEmployeeQuestions() {
-    inquirer.prompt(eeQuestions).then(udpateEmpArr)
-}
-
-function renderInformation() {
-    console.log(empArr)
-}
-
-function initialAnswers(answers) {
-    if (answers['Initial Question']==='Enter employee') {
-        askEmployeeQuestions();
-    } else if (answers['Initial Question']==='Render Information to team.html') {
-        renderInformation();
-    } else {
-        process.exit(0); 
-    }
-}
-
-inquirer.prompt(initialQuestions).then(initialAnswers);
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 // 
@@ -105,61 +106,3 @@ inquirer.prompt(initialQuestions).then(initialAnswers);
 // for further information. Be sure to test out each class and verify it generates an 
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work!
-
-// const specificQuestions = [
-//     {
-//         name: 'officeNumber',
-//         message: 'Please enter office phone number'
-//     },
-//     {
-//         name: 'gitHub',
-//         message: 'Please enter gitHub account id'
-//     },
-//     {
-//         name: 'School',
-//         message: 'Please enter school'
-//     }
-
-// ]
-//function menu () {
-    //     inquirer
-    //         .prompt(eeQuestions)
-    //         .then(answers => {
-                
-    //             if (answers['Exit']) {
-    //                 process.exit(0);
-    //             }
-    
-    //             else if (answers['Employee type']==='Manager') {
-    //                  inquirer
-    //                 .prompt(specificQuestions[0])
-    //                 .then(function managerAnswers() {
-    //                     const manager = new Manager(answers['Employee name'], answers['Employee id'], answers['Employee type'], managerAnswers);
-    //                     empArr.push(manager);
-    //                     //console.log(empArr);
-    //                     menu(empArr);
-    //                 })
-    //             } else if (answers['Employee type']==='Engineer') {
-    //                 inquirer
-    //                 .prompt(specificQuestions[1])
-    //                 .then(engineerAnswers => {
-    //                     const engineer = new Engineer(answers['Employee name'], answers['Employee id'], answers['Employee type'], engineerAnswers);
-    //                     empArr.push(engineer);
-    //                     //console.log(empArr);
-    //                 })
-    //             } else if (answers['Employee type']==='Intern') {
-    //                 inquirer
-    //                 .prompt(specificQuestions[2])
-    //                 .then(internAnswers => {
-    //                     const intern = new Intern(answers['Employee name'], answers['Employee id'], answers['Employee type'], internAnswers);
-    //                     empArr.push(intern);
-    //                     //console.log(empArr);
-    //                 })
-    //             } 
-    //             console.log(empArr);
-    //         }
-            
-    //         )
-    // }
-    // menu();
-    
