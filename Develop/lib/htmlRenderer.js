@@ -1,4 +1,4 @@
-// this is html renderer
+// this is html renderer - it creates a template based on results of inuirer in app.js for the html file ready for fs.writeFile
 const path = require("path");
 const fs = require("fs");
 
