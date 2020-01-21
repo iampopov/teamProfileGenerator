@@ -106,7 +106,7 @@ function validateId(id)
 }
 
 function validateName(name) {
-    return name !== '';
+    return name !== '' || "Please enter Name"
 }
 
 function validateEmail(email) {
