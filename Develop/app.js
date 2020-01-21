@@ -16,17 +16,18 @@ const eeQuestions = async (inputs = []) => {
     {
         name: 'employeeName',
         message: 'Please enter employee name: ',
-        default: 'default'
+        validate: validateName
     },
     {
         name: 'employeeId',
         message: 'Please enter employee id: ',
-        default: '1'
+        validate: validateId
     },
     {
         name: 'employeeEmail',
         message: 'Please enter employee email: ',
-        default: 'mail@mail.com'
+        default: 'mail@mail.com',
+        validate: validateEmail
     },
     {
         type: 'list',
@@ -97,7 +98,24 @@ const main = async () => {
       
       })
   };
-  
+
+function validateId(id)
+{
+    const reg = /^\d+$/;
+    return reg.test(id) || "ID should be a number!";
+}
+
+function validateName(name) {
+    return name !== '';
+}
+
+function validateEmail(email) {
+    
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return reg.test(email) || "Please enter a valid email";
+    
+   }
+
 main();
 
 
